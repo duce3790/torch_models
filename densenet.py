@@ -4,8 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from model_util import ModelUtil
-
 
 class BasicBlock(nn.Module):
     def __init__(
@@ -30,7 +28,7 @@ class BottleneckBlock(nn.Module):
     def __init__(
         self, in_planes, out_planes, drop_rate=0.0, norm_function=nn.BatchNorm2d
     ):
-        super(BottleneckBlock, self).__init__()
+        super().__init__()
         inter_planes = out_planes * 4
         self.bn1 = norm_function(in_planes)
         self.relu = nn.ReLU(inplace=True)
@@ -125,7 +123,6 @@ class DenseNet3(nn.Module):
         norm_function=nn.BatchNorm2d,
     ):
         super().__init__()
-        self.fuser_methods = list()
         in_planes = 2 * growth_rate
         n = (depth - 4) / 3
         if bottleneck:
@@ -142,10 +139,6 @@ class DenseNet3(nn.Module):
         self.block1 = DenseBlock(
             n, in_planes, growth_rate, block, drop_rate, norm_function=norm_function
         )
-        for name_list in ModelUtil(self.block1).get_sub_module_blocks(
-            {(nn.Conv2d, nn.BatchNorm2d)}
-        ):
-            self.fuser_methods.append(["block1." + a for a in name_list])
 
         in_planes = int(in_planes + n * growth_rate)
         self.trans1 = TransitionBlock(
@@ -159,10 +152,6 @@ class DenseNet3(nn.Module):
         self.block2 = DenseBlock(
             n, in_planes, growth_rate, block, drop_rate, norm_function=norm_function
         )
-        for name_list in ModelUtil(self.block2).get_sub_module_blocks(
-            {(nn.Conv2d, nn.BatchNorm2d)}
-        ):
-            self.fuser_methods.append(["block2." + a for a in name_list])
         in_planes = int(in_planes + n * growth_rate)
         self.trans2 = TransitionBlock(
             in_planes,
@@ -175,15 +164,10 @@ class DenseNet3(nn.Module):
         self.block3 = DenseBlock(
             n, in_planes, growth_rate, block, drop_rate, norm_function=norm_function
         )
-        for name_list in ModelUtil(self.block3).get_sub_module_blocks(
-            {(nn.Conv2d, nn.BatchNorm2d)}
-        ):
-            self.fuser_methods.append(["block3." + a for a in name_list])
         in_planes = int(in_planes + n * growth_rate)
         # global average pooling and classifier
         self.bn1 = norm_function(in_planes)
         self.relu = nn.ReLU(inplace=True)
-        self.fuser_methods.append(["bn1", "relu"])
         self.fc = nn.Linear(in_planes, num_classes)
         self.in_planes = in_planes
 
@@ -206,9 +190,6 @@ class DenseNet3(nn.Module):
         out = F.avg_pool2d(out, 8)
         out = out.view(-1, self.in_planes)
         return self.fc(out)
-
-    def get_fused_modules(self):
-        return self.fuser_methods
 
 
 def DenseNet40(num_classes, channels, **kwargs):
