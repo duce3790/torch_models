@@ -82,11 +82,11 @@ class TransformerClassificationModel(Module):
             self.linear = Linear(d_model, num_classes)
 
     def get_input_feature(self, inputs):
-        return self.positional_encoding(self.embedding(inputs))
+        return self.embedding(inputs)
 
     def forward_input_feature(self, embeddings):
         output = self.transformer_encoder(
-            src=embeddings,
+            src=self.positional_encoding(embeddings),
         )
         output = output.mean(dim=0)
         output = self.linear(output)
