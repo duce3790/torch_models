@@ -90,7 +90,7 @@ class TransformerClassificationModel(Module):
         )
         output = output.mean(dim=0)
         output = self.linear(output)
-        return output.view(-1)
+        return output
 
     def forward(self, inputs: Tensor) -> Tensor:
         return self.forward_input_feature(self.get_input_feature(inputs))
