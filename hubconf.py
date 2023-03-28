@@ -1,8 +1,6 @@
-from densenet import DenseNet40
-from dla_simple import SimpleDLA
-from fnn_model import FNNModel
-from lenet import LeNet5
-from lstm import SimpleLSTM
-from m5 import M5, SmallM5
-from rnn import SimpleRNN
-from transformer import TransformerClassificationModel, TransformerLangModel
+from text.lstm import SimpleLSTM
+from text.rnn import SimpleRNN
+from text.transformer import (TransformerClassificationModel,
+                              TransformerLangModel)
+from vision.densenet import DenseNet40
+from vision.lenet import LeNet5
