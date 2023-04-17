@@ -12,8 +12,6 @@ class SimpleGCN(torch.nn.Module):
         self.classifier = Linear(128, num_classes)
 
     def forward(self, x, edge_index):
-        x = x[0]
-        edge_index = edge_index[0]
         h = self.conv1(x, edge_index)
         h = h.relu()
         h = self.conv2(h, edge_index)
