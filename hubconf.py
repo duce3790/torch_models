@@ -8,8 +8,8 @@ except BaseException:
 try:
     from vision.densenet import DenseNet40
     from vision.lenet import LeNet5
-    from vision.CNNMnist import CNNMnist
     from vision.CNNCifar import CNNCifar
+    from vision.CNNMnist import CNNMnist
 except BaseException:
     pass
 try:
