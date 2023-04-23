@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 class CNNCifar(nn.Module):
-    def __init__(self, args):
+    def __init__(self):
         super(CNNCifar, self).__init__()
         self.conv1 = nn.Conv2d(3, 64, 3, padding=1)
         self.conv2 = nn.Conv2d(64, 64, 3, padding=1)
