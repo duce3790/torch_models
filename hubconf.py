@@ -10,6 +10,7 @@ try:
     from vision.lenet import LeNet5
     from vision.CNNCifar import CNNCifar
     from vision.CNNMnist import CNNMnist
+    from vision.CNNImageNet import CNNImageNet
 except BaseException:
     pass
 try:
